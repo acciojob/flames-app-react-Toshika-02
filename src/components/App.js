@@ -1,78 +1,56 @@
-import React, { useState } from "react";
-import '../styles/App.css';
+import React, { useState } from 'react'
 
-const App = () => {
-    const [firstname, setFirstname] = useState("");
-    const [secondname, setSecondname] = useState("");
-    const [status, setStatus] = useState("");
+function App(){
+  const[inp1,setInp1] = useState('')
+  const[inp2,setInp2] = useState('')
 
-    const calculateRelationship = () => {
-        if(firstname === '' || secondname === ''){
-            setStatus('Please Enter valid input');
-            return;
-        }
-
-        let firstArr = firstname.split("");
-        let secondArr = secondname.split("");
-        let newArr = [];
-
-        // To splice array and modify string
-        for(let i=0; i<firstArr.length; i++){
-            let flag = false;
-            for(let j=0; j<secondArr.length; j++){
-                if(firstArr[i]===secondArr[j]){
-                    secondArr.splice(j, 1);
-                    flag = true;
-                    break;
-                }
-            }
-            if(!flag){
-                // Then only need to add it(char) in our first string array
-                newArr.push(firstArr[i]);
-            }
-        }
+  const[result,setResult] = useState()
 
 
-        // To calculate relationship status
-        let str = newArr.join("") + secondArr.join("");
-        let n = (str.length) % 6;
-        switch(n){
-            case 1 :
-                return setStatus('Friends');
-            case 2 :
-                return setStatus('Love');
-            case 3 :
-                return setStatus('Affection');
-            case 4 :
-                return setStatus('Marriage');
-            case 5 :
-                return setStatus('Enemy');
-            case 0 :
-                return setStatus('Siblings');
-        }
-    }
+  function myfun1(e){
+    setInp1(e.target.value)
+  }
 
-    const clearStatus = () => {
-        setFirstname('');
-        setSecondname('');
-        setStatus('');
-    }
+  function myfun2(e){
+    setInp2(e.target.value)
+  }
 
-    return (
-        <div id="main">
-            {/* Do not remove the main div */}
-            <input type="text" placeholder="Enter first name" value={firstname} 
-                onChange={(e) => setFirstname(e.target.value)} data-testid="input1" name="name1"/>
-            <input type="text" placeholder="Enter second name" value={secondname} 
-                onChange={(e) => setSecondname(e.target.value)} data-testid="input2" name="name2" />
-            <button onClick={calculateRelationship} data-testid="calculate_relationship" >Calculate Relationship Future</button>
-            <button onClick={clearStatus} data-testid="clear" >Clear</button>
 
-            <h3 data-testid="answer" >{status}</h3>
-        </div>
-    )
+  function myfunction(){
+    const trimmedName1 = inp1.replace(/ /g, '').toUpperCase();
+    const trimmedName2 = inp2.replace(/ /g, '').toUpperCase();
+
+    console.log(trimmedName1)
+    
+    const uniqueCharsName1 = trimmedName1.split()
+    
+    const uniqueCharsName2 = trimmedName2.split()
+
+    const remainingCharsName1 = uniqueCharsName1.filter(char => !uniqueCharsName2.includes(char));
+    const remainingCharsName2 = uniqueCharsName2.filter(char => !uniqueCharsName1.includes(char));
+
+    const combinedLength = remainingCharsName1.length + remainingCharsName2.length;
+    const resultIndex = combinedLength % 6;
+
+    const relationships = ["Siblings", "Friends", "Love", "Affection", "Marriage", "Enemy"];
+    setResult(relationships[resultIndex]);
+  }
+
+  function Clear(){
+    setInp1('')
+    setInp2('')
+    setResult('')
+  }
+
+  return(
+    <div>
+      <input data-testid="input1" name="name1"  onChange={myfun1} value={inp1}  type="text" placeholder='Enter first name'/>
+      <input data-testid="input2" name="name2" onChange={myfun2} value={inp2} type="text" placeholder='Enter second name'/>
+      <button data-testid="calculate_relationship" onClick={myfunction}>Calculate Realationship Future</button>
+      <button data-testid="clear" onClick={Clear}>Clear</button>
+      <h3 data-testid="answer">Marriage : {result}</h3>
+    </div>
+  )
 }
-
-
 
 export default App;
